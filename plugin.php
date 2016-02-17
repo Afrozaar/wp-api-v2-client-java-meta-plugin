@@ -8,24 +8,24 @@
   */
   include_once ABSPATH.'wp-admin/includes/plugin.php';
 if (!is_plugin_active('rest-api/plugin.php')) {
-    add_action('admin_notices', 'pim_draw_notice_rest_api');
+    add_action('admin_notices', 'pim_draw_notice_rest_api_client_java');
     return;
 }
 
 if (!is_plugin_active('rest-api-meta-endpoints/plugin.php')) {
-    add_action('admin_notices', 'pim_draw_notice_rest_api_meta_endpoints');
+    add_action('admin_notices', 'pim_draw_notice_rest_api_meta_endpoints_client_java');
     return;
 }
 
 // Draws notice in case parent plugin not available
-function pim_draw_notice_rest_api()
+function pim_draw_notice_rest_api_client_java()
 {
     echo "<div id='message' class='error fade'><p style='line-height: 150%'>";
     _e('<strong>WP REST API - Afrozaar Extras</strong></a> requires the WP REST API plugin to be activated. Please <a href="http://wordpress.org/plugins/rest-api/">install / activate WP REST API</a> first.', 'rest-api');
     echo '</p></div>';
 }
 
-function pim_draw_notice_rest_api_meta_endpoints()
+function pim_draw_notice_rest_api_meta_endpoints_client_java()
 {
     echo "<div id='message' class='error fade'><p style='line-height: 150%'>";
     _e('<strong>WP REST API: Client-Java Meta Plugin</strong></a> requires the WP REST API Meta Endpoints plugin to be activated. Please <a href="http://wordpress.org/plugins/rest-api-meta-endpoints/">install / activate WP REST API Meta Endpoints</a> first.', 'rest-api-meta-endpoints');
