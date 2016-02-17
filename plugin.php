@@ -12,7 +12,7 @@ if (!is_plugin_active('rest-api/plugin.php')) {
     return;
 }
 
-if (!is_plugin_active() {
+if (!is_plugin_active()) {
     add_action('admin_notices', 'pim_draw_notice_rest_api_meta_endpoints');
     return;
 }
