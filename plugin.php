@@ -21,7 +21,7 @@ if (!is_plugin_active('rest-api-meta-endpoints/plugin.php')) {
 function pim_draw_notice_rest_api_client_java()
 {
     echo "<div id='message' class='error fade'><p style='line-height: 150%'>";
-    _e('<strong>WP REST API - Afrozaar Extras</strong></a> requires the WP REST API plugin to be activated. Please <a href="http://wordpress.org/plugins/rest-api/">install / activate WP REST API</a> first.', 'rest-api');
+    _e('<strong>WP REST API: Client-Java Meta Plugin</strong></a> requires the WP REST API plugin to be activated. Please <a href="http://wordpress.org/plugins/rest-api/">install / activate WP REST API</a> first.', 'rest-api');
     echo '</p></div>';
 }
 
