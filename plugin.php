@@ -6,40 +6,52 @@
   * Author: Afrozaar Consulting
   * Plugin URI: https://github.com/Afrozaar/wp-api-v2-client-java-meta-plugin
   */
-  include_once ABSPATH.'wp-admin/includes/plugin.php';
-if (!is_plugin_active('rest-api/plugin.php')) {
-    add_action('admin_notices', 'pim_draw_notice_rest_api_client_java');
-    return;
-}
+  include_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-if (!is_plugin_active('rest-api-meta-endpoints/plugin.php')) {
-    add_action('admin_notices', 'pim_draw_notice_rest_api_meta_endpoints_client_java');
+  if ( ! is_plugin_active( 'rest-api/plugin.php' )) {
+    add_action( 'admin_notices', 'pim_draw_notice_rest_api_client_java' );
     return;
-}
+  }
+
+  if ( ! is_plugin_active( 'rest-api-meta-endpoints/plugin.php' )) {
+    add_action( 'admin_notices', 'pim_draw_notice_rest_api_meta_endpoints_client_java' );
+    return;
+  }
+
+  require_once ABSPATH . 'wp-content/plugins/rest-api-meta-endpoints/lib/class-wp-rest-meta-controller.php';
+  require_once ABSPATH . 'wp-content/plugins/rest-api-meta-endpoints/lib/class-wp-rest-meta-posts-controller.php';
+  require_once dirname( __FILE__ ) . '/lib/endpoints/class-wp-rest-meta-extras-controller.php';
 
 // Draws notice in case parent plugin not available
-function pim_draw_notice_rest_api_client_java()
-{
+  function pim_draw_notice_rest_api_client_java() {
     echo "<div id='message' class='error fade'><p style='line-height: 150%'>";
     _e('<strong>WP REST API: Client-Java Meta Plugin</strong></a> requires the WP REST API plugin to be activated. Please <a href="http://wordpress.org/plugins/rest-api/">install / activate WP REST API</a> first.', 'rest-api');
     echo '</p></div>';
-}
+  }
 
-function pim_draw_notice_rest_api_meta_endpoints_client_java()
-{
+  function pim_draw_notice_rest_api_meta_endpoints_client_java() {
     echo "<div id='message' class='error fade'><p style='line-height: 150%'>";
-    _e('<strong>WP REST API: Client-Java Meta Plugin</strong></a> requires the WP REST API Meta Endpoints plugin to be activated. Please <a href="http://wordpress.org/plugins/rest-api-meta-endpoints/">install / activate WP REST API Meta Endpoints</a> first.', 'rest-api-meta-endpoints');
+    _e( '<strong>WP REST API: Client-Java Meta Plugin</strong></a> requires the WP REST API Meta Endpoints plugin to be activated. Please <a href="http://wordpress.org/plugins/rest-api-meta-endpoints/">install / activate WP REST API Meta Endpoints</a> first.', 'rest-api-meta-endpoints' );
     echo '</p></div>';
-}
+  }
 
 // BAOBAB INGESTOR CONFIG
-/*
-* meta keys are not available by default, we need this to interact with the site to set custom fields.
-*/
-function baobab_allow_meta_query($valid_vars)
-{
-    $valid_vars = array_merge($valid_vars, array('meta_key', 'meta_value', 'meta_compare'));
+  /*
+  * meta keys are not available by default, we need this to interact with the site to set custom fields.
+  */
+  function baobab_allow_meta_query( $valid_vars ) {
+    $valid_vars = array_merge( $valid_vars, array( 'meta_key', 'meta_value', 'meta_compare' ) );
     return $valid_vars;
-}
-add_filter('rest_query_vars', 'baobab_allow_meta_query');
-// BAOBAB BACKEND CONFIG END
+  }
+
+  add_filter( 'rest_query_vars', 'baobab_allow_meta_query' );
+
+
+  add_action( 'rest_api_init', function () {
+
+    //    // Meta extras
+    $controller = new WP_REST_Meta_Extras_Controller();
+    $controller->register_routes();
+
+  } );
+  // BAOBAB BACKEND CONFIG END
