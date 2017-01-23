@@ -1,6 +1,6 @@
 <?php
   /*
-  * Plugin Name: WP REST API: Client-Java Meta Plugin
+  * Plugin Name: WP REST API - Client-Java Meta Plugin
   * Description:  Enables meta endpoints required by wp-api-2.0-beta12+
   * Version:  0.2-SNAPSHOT
   * Author: Afrozaar Consulting
