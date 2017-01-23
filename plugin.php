@@ -8,9 +8,30 @@
   */
   include_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-  if ( ! is_plugin_active( 'rest-api/plugin.php' )) {
-    add_action( 'admin_notices', 'pim_draw_notice_rest_api_client_java' );
-    return;
+  const REG_4_7 = "/4\\.7(\\.\\d+)?/i";
+  const FILTER_QUERY_VARS_4_7 = "query_vars";
+  const FILTER_QUERY_VARS_4_6 = "rest_query_vars";
+
+  function merge_meta_query( $vars ) {
+    return array_merge( $vars, array( 'meta_key', 'meta_value', 'meta_compare', /*'meta_query', *'tax_query'*/ ) );
+  }
+
+  if ( ! preg_match( REG_4_7, get_bloginfo( 'version' ) )) {
+    /**
+     * Wordpress < 4.7 (WP-REST not integrated in Core, rest-api plugin required)
+     */
+    if ( ! is_plugin_active( 'rest-api/plugin.php' )) {
+      add_action( 'admin_notices', 'pim_draw_notice_rest_api_client_java' );
+      return;
+    }
+
+    add_filter( FILTER_QUERY_VARS_4_6, 'merge_meta_query' );
+  } else {
+    /**
+     * Wordpress >= 4.7 (WP-REST is integrated in Core)
+     */
+
+    add_filter( FILTER_QUERY_VARS_4_7, 'merge_meta_query' );
   }
 
   if ( ! is_plugin_active( 'rest-api-meta-endpoints/plugin.php' )) {
@@ -35,18 +56,6 @@
     echo '</p></div>';
   }
 
-// BAOBAB INGESTOR CONFIG
-  /*
-  * meta keys are not available by default, we need this to interact with the site to set custom fields.
-  */
-  function baobab_allow_meta_query( $valid_vars ) {
-    $valid_vars = array_merge( $valid_vars, array( 'meta_key', 'meta_value', 'meta_compare' ) );
-    return $valid_vars;
-  }
-
-  add_filter( 'rest_query_vars', 'baobab_allow_meta_query' );
-
-
   add_action( 'rest_api_init', function () {
 
     //    // Meta extras
@@ -54,4 +63,3 @@
     $controller->register_routes();
 
   } );
-  // BAOBAB BACKEND CONFIG END
