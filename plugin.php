@@ -2,37 +2,23 @@
   /*
   * Plugin Name: WP REST API - Client-Java Meta Plugin
   * Description:  Enables meta endpoints required by wp-api-2.0-beta12+
-  * Version:  0.3
+  * Version:  0.4-SNAPSHOT
   * Author: Afrozaar Consulting
   * Plugin URI: https://github.com/Afrozaar/wp-api-v2-client-java-meta-plugin
   */
   include_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-  const REG_4_7 = "/4\\.(7|8)(\\.\\d+)?/i";
+  const REG_4_7 = "/4\\.(7|8|9)(\\.\\d+)?/i";
   const FILTER_QUERY_VARS_4_7 = "query_vars";
-  const FILTER_QUERY_VARS_4_6 = "rest_query_vars";
 
   function merge_meta_query( $vars ) {
     return array_merge( $vars, array( 'meta_key', 'meta_value', 'meta_compare', /*'meta_query', *'tax_query'*/ ) );
   }
 
-  if ( ! preg_match( REG_4_7, get_bloginfo( 'version' ) )) {
-    /**
-     * Wordpress < 4.7 (WP-REST not integrated in Core, rest-api plugin required)
-     */
-    if ( ! is_plugin_active( 'rest-api/plugin.php' )) {
-      add_action( 'admin_notices', 'pim_draw_notice_rest_api_client_java' );
-      return;
-    }
-
-    add_filter( FILTER_QUERY_VARS_4_6, 'merge_meta_query' );
-  } else {
-    /**
-     * Wordpress >= 4.7 (WP-REST is integrated in Core)
-     */
-
-    add_filter( FILTER_QUERY_VARS_4_7, 'merge_meta_query' );
-  }
+  /**
+   * Wordpress >= 4.7 (WP-REST is integrated in Core)
+   */
+  add_filter( FILTER_QUERY_VARS_4_7, 'merge_meta_query' );
 
   if ( ! is_plugin_active( 'rest-api-meta-endpoints/plugin.php' )) {
     add_action( 'admin_notices', 'pim_draw_notice_rest_api_meta_endpoints_client_java' );
